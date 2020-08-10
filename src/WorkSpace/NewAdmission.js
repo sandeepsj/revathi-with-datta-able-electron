@@ -86,7 +86,7 @@ class FormsElements extends React.Component {
                             />
                           </Form.Group>
                         </Col>
-                        <Col md={6}>
+                        {/* <Col md={6}>
                           <Form.Group controlId="exampleForm.ControlInput1">
                             <Form.Label>Parent's Name</Form.Label>
                             <Form.Control
@@ -94,17 +94,18 @@ class FormsElements extends React.Component {
                               placeholder="Parent's Name"
                             />
                           </Form.Group>
+                        </Col> */}
+
+                        <Col md={6}>
+                          <Form.Group controlId="exampleForm.ControlInput1">
+                            <Form.Label>Phone No.</Form.Label>
+                            <Form.Control type="text" placeholder="Phone No." />
+                          </Form.Group>
                         </Col>
                         <Col md={6}>
                           <Form.Group controlId="exampleForm.ControlTextarea1">
                             <Form.Label>Address</Form.Label>
                             <Form.Control as="textarea" rows="3" />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Phone No.</Form.Label>
-                            <Form.Control type="text" placeholder="Phone No." />
                           </Form.Group>
                         </Col>
                       </Row>

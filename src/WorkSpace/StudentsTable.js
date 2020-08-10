@@ -117,20 +117,17 @@ class TableBootstrap extends React.Component {
                 <Table responsive hover>
                   <thead>
                     <tr>
-                      {Object.keys(this.state.headers).map((header) => (
+                      {this.state.headers.map((header) => (
                         <th key={header}>
                           {/* <Form.Label>{this.state.headers[header]}</Form.Label> */}
                           <Form.Control
                             type="email"
-                            placeholder={this.state.headers[header]}
+                            placeholder={header}
                             style={{
                               width: "110%",
                             }}
                             onChange={(event) =>
-                              this.handleSearch(
-                                this.state.headers[header],
-                                event.target.value
-                              )
+                              this.handleSearch(header, event.target.value)
                             }
                           />
                         </th>
@@ -156,7 +153,13 @@ class TableBootstrap extends React.Component {
                 <td key={col}>{row[col]}</td>
               ))}
               <td>
-                <Badge variant="success" style={{ cursor: "pointer" }}>
+                <Badge
+                  variant="success"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    window.open("/WorkSpace/SubWindows/StudentDetails")
+                  }
+                >
                   More Details
                 </Badge>
               </td>
