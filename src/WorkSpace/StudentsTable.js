@@ -157,7 +157,7 @@ class TableBootstrap extends React.Component {
                   variant="success"
                   style={{ cursor: "pointer" }}
                   onClick={() =>
-                    window.open("/WorkSpace/SubWindows/StudentDetails")
+                    window.open("#/WorkSpace/SubWindows/StudentDetails")
                   }
                 >
                   More Details
