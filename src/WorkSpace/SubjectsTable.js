@@ -11,20 +11,56 @@ import {
 } from "react-bootstrap";
 
 import Aux from "../hoc/_Aux";
-
+const electron = window.require("electron");
+const ipc = electron.ipcRenderer;
 class BootstrapTable extends React.Component {
   state = {
-    subjects: {
-      Veena: 300,
-      Guitar: 500,
-      Keyboard: 1000,
-      Dance: 700,
-      Vocal: 400,
-      Drawing: 500,
-      Tabla: 550,
-    },
+    subjects: [],
+
     modalStatus: false,
   };
+  targetSubject;
+  newSubjectName = React.createRef();
+  newSubjectFee = React.createRef();
+  getSubjects = () => {
+    ipc.send("getReq", "Subject");
+    ipc.on("getRes-Subject", (evt, reply) => {
+      this.setState({
+        subjects: [...reply],
+        modalStatus: this.state.modalStatus,
+      });
+    });
+  };
+  deleteSubject = (subjectName) => {
+    ipc.send("deleteReq", "Subject", subjectName);
+    ipc.on("deleteRes-Subject", (evt, reply) => {
+      if (reply === 1) this.getSubjects();
+      console.log("Error while delete");
+    });
+  };
+  updateSubject = (subjectName, fee) => {
+    ipc.send("updateReq", "Subject", subjectName, fee);
+    ipc.on("updateRes-Subject", (evt, reply) => {
+      if (reply === 1) this.getSubjects();
+      else console.log("Error while updating");
+    });
+  };
+  addSubject = (subjectName, fee) => {
+    ipc.send("addReq", "Subject", {
+      subject: subjectName.current.value,
+      fee: fee.current.value,
+    });
+    ipc.on("addRes-Subject", (evt, reply) => {
+      if (reply === 1) {
+        this.getSubjects();
+        subjectName.current.value = "";
+        fee.current.value = "";
+      } else console.log("Error while adding");
+    });
+  };
+  componentDidMount() {
+    this.getSubjects();
+  }
   render() {
     return (
       <Aux>
@@ -34,7 +70,7 @@ class BootstrapTable extends React.Component {
               <Card.Header>
                 <Card.Title as="h5">Hover Table</Card.Title>
                 <span className="d-block m-t-5">
-                  use props <code>hover</code> with <code>Table</code> component
+                  Update Fee, Remove a Subject or Add a new Subject.
                 </span>
               </Card.Header>
               <Card.Body>
@@ -43,34 +79,65 @@ class BootstrapTable extends React.Component {
                 <Row>
                   <Col md={5}>
                     <Form>
-                      {Object.keys(this.state.subjects).map((subject) => (
-                        <InputGroup className="mb-3" key={subject}>
+                      {this.state.subjects.map((row) => (
+                        <InputGroup className="mb-3" key={row.Subject}>
                           <InputGroup.Prepend>
-                            <Button variant="secondary" style={{ width: 150 }}>
-                              {subject}
+                            <Button variant="secondary" style={{ width: 120 }}>
+                              {row.Subject}
                             </Button>
                           </InputGroup.Prepend>
                           <FormControl
-                            defaultValue={this.state.subjects[subject]}
+                            defaultValue={row.Fee}
                             aria-describedby="basic-addon1"
                           />
                           <InputGroup.Append>
                             <Button
                               variant="outline-secondary"
-                              onClick={() =>
+                              onClick={() => {
+                                this.targetSubject = row.Subject;
                                 this.setState({
                                   ...this.state.subject,
                                   modalStatus: true,
-                                })
-                              }
+                                });
+                              }}
                             >
                               <i className="fa fa-trash"></i>
                             </Button>
                           </InputGroup.Append>
                         </InputGroup>
                       ))}
-                      <Button variant="primary">Submit</Button>
+                      <Form
+                        onSubmit={() => {
+                          this.addSubject(
+                            this.newSubjectName,
+                            this.newSubjectFee
+                          );
+                        }}
+                      >
+                        <InputGroup className="mb-3">
+                          <InputGroup.Prepend>
+                            <FormControl
+                              placeholder="New Subject"
+                              aria-describedby="basic-addon1"
+                              style={{ width: 120 }}
+                              ref={this.newSubjectName}
+                            />
+                          </InputGroup.Prepend>
+                          <FormControl
+                            placeholder="New Fee"
+                            aria-describedby="basic-addon1"
+                            ref={this.newSubjectFee}
+                          />
+                          <InputGroup.Append>
+                            <Button variant="warning" type="submit">
+                              <i className="fa fa-plus-square"></i>
+                            </Button>
+                          </InputGroup.Append>
+                        </InputGroup>
+                      </Form>
+                      <Button variant="primary">Save</Button>
                     </Form>
+
                     <Modal
                       size="sm"
                       aria-labelledby="contained-modal-title-vcenter"
@@ -84,21 +151,20 @@ class BootstrapTable extends React.Component {
                       </Modal.Header>
                       <Modal.Body>
                         <p>
-                          Cras mattis consectetur purus sit amet fermentum. Cras
-                          justo odio, dapibus ac facilisis in, egestas eget
-                          quam. Morbi leo risus, porta ac consectetur ac,
-                          vestibulum at eros.
+                          This action cannot be reversed!! Are you Sure to
+                          Delete?
                         </p>
                       </Modal.Body>
                       <Modal.Footer>
                         <Button
                           variant="danger"
-                          onClick={() =>
+                          onClick={() => {
                             this.setState({
                               ...this.state.subject,
                               modalStatus: false,
-                            })
-                          }
+                            });
+                            this.deleteSubject(this.targetSubject);
+                          }}
                         >
                           Delete
                         </Button>

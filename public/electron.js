@@ -5,11 +5,19 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const url = require("url");
 const isDev = require("electron-is-dev");
+const db = require("./dblib");
+const ipcRouter = require("./ipcRouter");
 
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 900, height: 680 });
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"

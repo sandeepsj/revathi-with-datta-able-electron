@@ -5,7 +5,7 @@ window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
-const DashboardDefault = React.lazy(() => import("./Demo/Dashboard/Default"));
+const DashboardDefault = React.lazy(() => import("./WorkSpace/Dashboard"));
 
 const NewAdmission = React.lazy(() => import("./WorkSpace/NewAdmission"));
 const FeePayment = React.lazy(() => import("./WorkSpace/FeePayment"));

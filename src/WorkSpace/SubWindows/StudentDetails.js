@@ -4,17 +4,74 @@ import "../../assets/scss/style.scss";
 import Aux from "../../hoc/_Aux";
 import PersonalDetails from "./personalDetails";
 import Home from "./home";
+import AdmissionDetails from "./admissionDetails";
+const electron = window.require("electron");
+const ipc = electron.ipcRenderer;
 class TabsPills extends React.Component {
   state = {
-    name: "Sandeep S J",
+    personalDetails: {
+      StudentID: 0,
+      "Student's Name": "",
+      School: "",
+      "Date-of-Birth": "2020-08-27",
+      Gender: "",
+      Phone: "",
+      "Alternate Phone": "",
+      Email: "ssj@gmc.oms",
+      "Father's Name": "",
+      "Mother's Name": "",
+      "Father's Occupation": "",
+      "Mother's Occupation": "",
+      "Monthly Income": 1000,
+      pState: "",
+      pDistrict: "",
+      pCity: "",
+      pHomeStreetLandMark: "",
+      pPincode: "",
+      rState: "",
+      rDistrict: "",
+      rCity: "",
+      rHomeStreetLandMark: "",
+      rPincode: "",
+    },
+    admissionDetails: {
+      // 0: {
+      //   AdmissionNo: 1,
+      //   StudentID: 1,
+      //   Subject: "Keyboard",
+      //   "Admission Date": "2020-08-27",
+      //   "Closed Date": null,
+      //   Status: "OPEN",
+      // },
+      // 1: {
+      //   AdmissionNo: 2,
+      //   StudentID: 1,
+      //   Subject: "Dance",
+      //   "Admission Date": "2020-08-27",
+      //   "Closed Date": null,
+      //   Status: "OPEN",
+      // },
+    },
   };
+
+  requestId = () => {
+    ipc.send("subWindowReq-StudentCard");
+    ipc.on("Res-StudentCard", (evt, reply) => {
+      ipc.send("StudentCard", reply);
+      this.setState({ ...reply });
+      console.log(this.state, "kugyfyrxuji");
+    });
+  };
+  componentDidMount() {
+    this.requestId();
+  }
   render() {
     return (
       <Aux>
         <Container>
           <Row>
             <Col>
-              <h5 className="mt-4">{this.state.name}</h5>
+              <h5 className="mt-4">{this.state["Student's Name"]}</h5>
               <hr />
               <Tab.Container defaultActiveKey="home">
                 <Row>
@@ -27,22 +84,31 @@ class TabsPills extends React.Component {
                         <Nav.Link eventKey="profile">Personal Details</Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
-                        <Nav.Link eventKey="fee-details">Fee Details</Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
                         <Nav.Link eventKey="admission-details">
                           Admission Details
                         </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="fee-details">Fee Details</Nav.Link>
                       </Nav.Item>
                     </Nav>
                   </Col>
                   <Col sm={9}>
                     <Tab.Content>
                       <Tab.Pane eventKey="home">
-                        <Home />
+                        <Home state={this.state.personalDetails} key="home" />
                       </Tab.Pane>
                       <Tab.Pane eventKey="profile">
-                        <PersonalDetails />
+                        <PersonalDetails
+                          state={this.state.personalDetails}
+                          key="personalDetails"
+                        />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="admission-details">
+                        <AdmissionDetails
+                          state={this.state}
+                          key="admissionDetails"
+                        />
                       </Tab.Pane>
                       <Tab.Pane eventKey="fee-details">
                         <p>
@@ -58,18 +124,6 @@ class TabsPills extends React.Component {
                           probably haven't heard of them, vinyl craft beer blog
                           stumptown. Pitchfork sustainable tofu synth chambray
                           yr.
-                        </p>
-                      </Tab.Pane>
-                      <Tab.Pane eventKey="admission-details">
-                        <p>
-                          Eu dolore ea ullamco dolore Lorem id cupidatat
-                          excepteur reprehenderit consectetur elit id dolor
-                          proident in cupidatat officia. Voluptate excepteur
-                          commodo labore nisi cillum duis aliqua do. Aliqua amet
-                          qui mollit consectetur nulla mollit velit aliqua
-                          veniam nisi id do Lorem deserunt amet. Culpa ullamco
-                          sit adipisicing labore officia magna elit nisi in aute
-                          tempor commodo eiusmod.
                         </p>
                       </Tab.Pane>
                     </Tab.Content>

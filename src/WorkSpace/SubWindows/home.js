@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Badge } from "react-bootstrap";
 import DefaultAvatar from "../../assets/images/user/avatar blank.png";
+
 class Home extends Component {
   state = {};
+
   render() {
     return (
       <div>
@@ -16,12 +18,10 @@ class Home extends Component {
           </div>
           <div className="col-9">
             <div className="row p-2">
-              <h5>Sandeep S J</h5>
+              <h5>{this.props.state["Student's Name"]}</h5>
             </div>
-            <div className="row p-2">
-              School: Kadathanad Rajas Heigher Secondary School
-            </div>
-            <div className="row p-2">Phone: 7594018731</div>
+            <div className="row p-2">School: {this.props.state["School"]}</div>
+            <div className="row p-2">Phone: {this.props.state["Phone"]}</div>
             <div className="row p-2">
               <p>
                 Fee Due:<Badge variant="warning">3 Months</Badge>

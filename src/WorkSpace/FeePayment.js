@@ -25,7 +25,7 @@ class FormsElements extends React.Component {
                 <h5>Fill the details and Get Receipt</h5>
 
                 <Row>
-                  <Col md={6}>
+                  <Col md={8}>
                     <hr />
                     <Form>
                       <Row>

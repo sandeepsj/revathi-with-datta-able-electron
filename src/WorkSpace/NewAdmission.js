@@ -1,9 +1,91 @@
 import React from "react";
 import { Row, Col, Card, Form, Button } from "react-bootstrap";
-
 import Aux from "../hoc/_Aux";
+import StudentDetailsForm from "./newAdmissionComponents/StudentDetailsForm";
+import ParentsDetailsForm from "./newAdmissionComponents/parentsDetailsForm";
+import AddressForm from "./newAdmissionComponents/addressForm";
+import SubjectsForm from "./newAdmissionComponents/subjectsForm";
+
+const electron = window.require("electron");
+const ipc = electron.ipcRenderer;
 
 class FormsElements extends React.Component {
+  state = {
+    subjects: [],
+    admnNo: 0,
+  };
+  newAdmission = {
+    admissionDate: React.createRef(),
+    studentsName: React.createRef(),
+    school: React.createRef(),
+    dateOfBirth: React.createRef(),
+    gender: React.createRef(),
+    phone: React.createRef(),
+    alternatePhone: React.createRef(),
+    email: React.createRef(),
+    fathersName: React.createRef(),
+    fathersOccupation: React.createRef(),
+    mothersName: React.createRef(),
+    mothersOccupation: React.createRef(),
+    mothlyIncome: React.createRef(),
+    Pstate: React.createRef(),
+    Pdistrict: React.createRef(),
+    Pcity: React.createRef(),
+    Ppincode: React.createRef(),
+    PhomeStreetLandMark: React.createRef(),
+    Rstate: React.createRef(),
+    Rdistrict: React.createRef(),
+    Rcity: React.createRef(),
+    Rpincode: React.createRef(),
+    RhomeStreetLandMark: React.createRef(),
+  };
+  getSubjects = () => {
+    ipc.send("getReq", "Subject");
+    ipc.on("getRes-Subject", (evt, reply) => {
+      this.newAdmission.subjects = {};
+      reply.map((subject) => {
+        this.newAdmission.subjects[subject.Subject] = React.createRef();
+      });
+      this.setState({
+        subjects: [...reply],
+        admnNo: this.state.admnNo,
+      });
+    });
+  };
+  getAdmnNo = () => {
+    ipc.send("nextAdmissionNo");
+    ipc.on("Res-nextAdmissionNo", (evt, reply) => {
+      this.setState({ ...this.state.subjects, admnNo: reply });
+    });
+  };
+  submitAdmission = (values) => {
+    var studentDetails = {};
+    Object.keys(values).map((key) => {
+      if (key === "subjects") {
+        studentDetails.subjects = [];
+        Object.keys(values.subjects).map((subject) => {
+          if (values.subjects[subject].current.checked)
+            studentDetails.subjects.push(subject);
+        });
+      } else studentDetails[key] = values[key].current.value;
+    });
+    ipc.send("newAdmission", { ...studentDetails });
+    ipc.on("newAdmissionRes", (evt, reply) => {
+      alert(reply);
+    });
+  };
+  handleResidetialAddres = () => {
+    this.newAdmission.Rstate.current.value = this.newAdmission.Pstate.current.value;
+    this.newAdmission.Rcity.current.value = this.newAdmission.Pcity.current.value;
+    this.newAdmission.Rdistrict.current.value = this.newAdmission.Pdistrict.current.value;
+    this.newAdmission.RhomeStreetLandMark.current.value = this.newAdmission.PhomeStreetLandMark.current.value;
+    this.newAdmission.Rpincode.current.value = this.newAdmission.Ppincode.current.value;
+  };
+  componentDidMount() {
+    this.getSubjects();
+    this.getAdmnNo();
+  }
+
   render() {
     return (
       <Aux>
@@ -20,172 +102,34 @@ class FormsElements extends React.Component {
                 <hr />
                 <Row>
                   <Col md={12}>
-                    <Form>
-                      <Row>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Admission No</Form.Label>
-                            <Form.Control
-                              type="number"
-                              placeholder="Admission No"
-                            />
-                          </Form.Group>
-                        </Col>
-
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Admission Date</Form.Label>
-                            <Form.Control
-                              type="date"
-                              placeholder="Admission Date"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Sudent's Name</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="Student's Name"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Parent's Name</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="Parent's Name"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Parent's Occupation</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="Parent's Occupation"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>School Name</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="School Name"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Date of Birth</Form.Label>
-                            <Form.Control
-                              type="date"
-                              placeholder="Date of Birth"
-                            />
-                          </Form.Group>
-                        </Col>
-                        {/* <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Parent's Name</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="Parent's Name"
-                            />
-                          </Form.Group>
-                        </Col> */}
-
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>Phone No.</Form.Label>
-                            <Form.Control type="text" placeholder="Phone No." />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="exampleForm.ControlTextarea1">
-                            <Form.Label>Address</Form.Label>
-                            <Form.Control as="textarea" rows="3" />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                      <h6 className="mt-6">Choose the Subjects Enrolled</h6>
+                    <Form
+                      onSubmit={() => this.submitAdmission(this.newAdmission)}
+                    >
+                      <StudentDetailsForm
+                        state={this.state}
+                        newAdmission={this.newAdmission}
+                      />
                       <hr />
-                      <Row>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox1"
-                              label="Keyboard"
-                            />
-                          </Form.Group>
-                        </Col>
+                      <ParentsDetailsForm
+                        state={this.state}
+                        newAdmission={this.newAdmission}
+                      />
+                      <hr />
+                      <AddressForm
+                        state={this.state}
+                        newAdmission={this.newAdmission}
+                        handleResidetialAddres={this.handleResidetialAddres}
+                      />
+                      <hr />
+                      <SubjectsForm
+                        state={this.state}
+                        newAdmission={this.newAdmission}
+                      />
+                      <hr />
 
-                        <Col md={3}>
-                          {" "}
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox2"
-                              label="Veena"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox3"
-                              label="Guitar"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox4"
-                              label="Tabla"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox5"
-                              label="Vocal"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox6"
-                              label="Dance"
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group>
-                            <Form.Check
-                              custom
-                              type="checkbox"
-                              id="checkbox7"
-                              label="Drawing"
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                      <Button variant="primary">Submit</Button>
+                      <Button type="submit" variant="primary">
+                        Submit
+                      </Button>
                     </Form>
                   </Col>
                 </Row>

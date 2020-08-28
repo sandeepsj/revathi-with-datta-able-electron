@@ -2,88 +2,30 @@ import React from "react";
 import { Row, Col, Card, Form, Table, Badge } from "react-bootstrap";
 import Aux from "../hoc/_Aux";
 
+const electron = window.require("electron");
+const ipc = electron.ipcRenderer;
+
 class TableBootstrap extends React.Component {
   state = {
-    data: [
-      {
-        id: 0,
-        name: "San",
-        "Father's Name": "Jyo",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-      {
-        id: 1,
-        name: "San",
-        "Father's Name": "Jio",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-      {
-        id: 2,
-        name: "San",
-        "Father's Name": "kyo",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-    ],
-    headers: [
-      "id",
-      "name",
-      "Father's Name",
-      "Phone",
-      "School",
-      "Subjects",
-      "AdmnDate",
-    ],
+    data: [],
+    headers: [],
   };
   originalData = {
-    data: [
-      {
-        id: 0,
-        name: "San",
-        "Father's Name": "Jyo",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-      {
-        id: 1,
-        name: "San",
-        "Father's Name": "Jio",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-      {
-        id: 2,
-        name: "San",
-        "Father's Name": "kyo",
-        Phone: "7594018731",
-        School: "KRHSS",
-        Subjects: "Keyboard, Vocal, Gitar, Tabla",
-        AdmnDate: "21-03-2020",
-      },
-    ],
-    headers: [
-      "id",
-      "name",
-      "Father's Name",
-      "Phone",
-      "School",
-      "Subjects",
-      "AdmnDate",
-    ],
+    data: [],
+    headers: [],
   };
   searchKeys = {};
+
+  getStudents = () => {
+    ipc.send("getReq", "Student");
+    ipc.on("getRes-Student", (evt, reply) => {
+      this.setState({ data: [...reply], headers: [...Object.keys(reply[0])] });
+      this.originalData = {
+        data: [...reply],
+        headers: [...Object.keys(reply[0])],
+      };
+    });
+  };
 
   handleSearch = (col, value) => {
     this.searchKeys[col] = value;
@@ -99,6 +41,14 @@ class TableBootstrap extends React.Component {
     });
     this.setState({ ...newState });
   };
+  notifyMain = (id) => {
+    console.log(id);
+    ipc.send("newSubWindow-StudentCard", id);
+  };
+
+  componentDidMount() {
+    this.getStudents();
+  }
   render() {
     return (
       <Aux>
@@ -148,7 +98,7 @@ class TableBootstrap extends React.Component {
       return (
         <tbody>
           {this.state.data.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.StudentID}>
               {Object.keys(row).map((col) => (
                 <td key={col}>{row[col]}</td>
               ))}
@@ -156,9 +106,14 @@ class TableBootstrap extends React.Component {
                 <Badge
                   variant="success"
                   style={{ cursor: "pointer" }}
-                  onClick={() =>
-                    window.open("#/WorkSpace/SubWindows/StudentDetails")
-                  }
+                  onClick={() => {
+                    window.open(
+                      `#/WorkSpace/SubWindows/StudentDetails`,
+                      `StudentCard-${row.StudentID}`,
+                      "height=625"
+                    );
+                    this.notifyMain(row.StudentID);
+                  }}
                 >
                   More Details
                 </Badge>
