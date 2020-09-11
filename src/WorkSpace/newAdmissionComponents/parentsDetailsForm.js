@@ -15,7 +15,7 @@ class ParentsDetailsForm extends Component {
               type="text"
               placeholder="Father's Name"
               ref={this.props.newAdmission.fathersName}
-              value="Jyohty"
+              // value="Jyohty"
             />
           </Form.Group>
         </Col>
@@ -26,7 +26,7 @@ class ParentsDetailsForm extends Component {
               type="text"
               placeholder="Father's Occupation"
               ref={this.props.newAdmission.fathersOccupation}
-              value="teacher"
+              // value="teacher"
             />
           </Form.Group>
         </Col>
@@ -37,7 +37,7 @@ class ParentsDetailsForm extends Component {
               type="text"
               placeholder="Mother's Name"
               ref={this.props.newAdmission.mothersName}
-              value="sreelatha"
+              // value="sreelatha"
             />
           </Form.Group>
         </Col>
@@ -48,7 +48,7 @@ class ParentsDetailsForm extends Component {
               type="text"
               placeholder="Mother's Occupation"
               ref={this.props.newAdmission.mothersOccupation}
-              value="teacher"
+              // value="teacher"
             />
           </Form.Group>
         </Col>
@@ -60,7 +60,7 @@ class ParentsDetailsForm extends Component {
               type="text"
               placeholder="Monthly Income"
               ref={this.props.newAdmission.mothlyIncome}
-              value="1000"
+              // value="1000"
             />
           </Form.Group>
         </Col>

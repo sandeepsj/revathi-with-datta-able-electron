@@ -26,7 +26,7 @@ class AddressForm extends Component {
               type="text"
               placeholder="State"
               ref={this.props.newAdmission.Pstate}
-              defaultValue="Kerala"
+              // defaultValue="Kerala"
               onChange={this.props.handleResidetialAddres}
             />
           </Form.Group>
@@ -40,7 +40,7 @@ class AddressForm extends Component {
               placeholder="District"
               ref={this.props.newAdmission.Pdistrict}
               onChange={this.props.handleResidetialAddres}
-              defaultValue="Kollam"
+              // defaultValue="Kollam"
             />
           </Form.Group>
         </Col>
@@ -53,7 +53,7 @@ class AddressForm extends Component {
               placeholder="City"
               ref={this.props.newAdmission.Pcity}
               onChange={this.props.handleResidetialAddres}
-              defaultValue="Vadakara"
+              // defaultValue="Vadakara"
             />
           </Form.Group>
         </Col>
@@ -66,7 +66,7 @@ class AddressForm extends Component {
               placeholder="Pin Code"
               ref={this.props.newAdmission.Ppincode}
               onChange={this.props.handleResidetialAddres}
-              defaultValue="673503"
+              // defaultValue="673503"
             />
           </Form.Group>
         </Col>
@@ -79,7 +79,7 @@ class AddressForm extends Component {
               rows="2"
               ref={this.props.newAdmission.PhomeStreetLandMark}
               onChange={this.props.handleResidetialAddres}
-              defaultValue="Anganonnuilla"
+              // defaultValue="Anganonnuilla"
             />
           </Form.Group>
         </Col>

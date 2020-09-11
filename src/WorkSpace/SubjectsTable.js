@@ -22,12 +22,16 @@ class BootstrapTable extends React.Component {
   targetSubject;
   newSubjectName = React.createRef();
   newSubjectFee = React.createRef();
+  updateRefArray = {};
   getSubjects = () => {
     ipc.send("getReq", "Subject");
     ipc.on("getRes-Subject", (evt, reply) => {
       this.setState({
         subjects: [...reply],
         modalStatus: this.state.modalStatus,
+      });
+      reply.map((tuple) => {
+        this.updateRefArray[tuple.Subject] = React.createRef();
       });
     });
   };
@@ -38,25 +42,45 @@ class BootstrapTable extends React.Component {
       console.log("Error while delete");
     });
   };
-  updateSubject = (subjectName, fee) => {
-    ipc.send("updateReq", "Subject", subjectName, fee);
-    ipc.on("updateRes-Subject", (evt, reply) => {
-      if (reply === 1) this.getSubjects();
-      else console.log("Error while updating");
-    });
+  updateSubject = () => {
+    if (1 === 2) {
+      alert("Enter a valid amount as Fee");
+      return;
+    } else {
+      const updatedSubjects = [];
+      this.state.subjects.map((tuple) => {
+        if (tuple.Fee != this.updateRefArray[tuple.Subject].current.value) {
+          updatedSubjects.push({
+            Subject: tuple.Subject,
+            Fee: this.updateRefArray[tuple.Subject].current.value,
+          });
+        }
+      });
+      console.log(updatedSubjects);
+      ipc.send("updateReq", "Subject", updatedSubjects);
+      ipc.on("updateRes-Subject", (evt, reply) => {
+        if (reply === 1) this.getSubjects();
+        else console.log("Error while updating");
+      });
+    }
   };
   addSubject = (subjectName, fee) => {
-    ipc.send("addReq", "Subject", {
-      subject: subjectName.current.value,
-      fee: fee.current.value,
-    });
-    ipc.on("addRes-Subject", (evt, reply) => {
-      if (reply === 1) {
-        this.getSubjects();
-        subjectName.current.value = "";
-        fee.current.value = "";
-      } else console.log("Error while adding");
-    });
+    if (isNaN(fee.current.value)) {
+      alert("Enter a valid amount as Fee");
+      return;
+    } else {
+      ipc.send("addReq", "Subject", {
+        subject: subjectName.current.value,
+        fee: fee.current.value,
+      });
+      ipc.on("addRes-Subject", (evt, reply) => {
+        if (reply === 1) {
+          this.getSubjects();
+          subjectName.current.value = "";
+          fee.current.value = "";
+        } else console.log("Error while adding");
+      });
+    }
   };
   componentDidMount() {
     this.getSubjects();
@@ -89,6 +113,7 @@ class BootstrapTable extends React.Component {
                           <FormControl
                             defaultValue={row.Fee}
                             aria-describedby="basic-addon1"
+                            ref={this.updateRefArray[row.Subject]}
                           />
                           <InputGroup.Append>
                             <Button
@@ -135,7 +160,9 @@ class BootstrapTable extends React.Component {
                           </InputGroup.Append>
                         </InputGroup>
                       </Form>
-                      <Button variant="primary">Save</Button>
+                      <Button variant="primary" onClick={this.updateSubject}>
+                        Save
+                      </Button>
                     </Form>
 
                     <Modal

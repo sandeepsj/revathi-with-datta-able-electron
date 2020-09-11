@@ -1,7 +1,7 @@
 const knex = require("knex")({
   client: "sqlite3",
   connection: {
-    filename: "./database/revathi.db",
+    filename: "./revathi.db",
   },
   useNullAsDefault: true,
 });

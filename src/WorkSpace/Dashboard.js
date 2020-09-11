@@ -132,7 +132,8 @@ class Dashboard extends React.Component {
     return (
       <Aux>
         <Row>
-          <Col md={6} xl={4}>
+          <Card className="card-social">Just a Trial Version!!</Card>
+          {/* <Col md={6} xl={4}>
             <Card className="card-social">
               <Card.Body className="border-bottom">
                 <div className="row align-items-center justify-content-center">
@@ -308,7 +309,7 @@ class Dashboard extends React.Component {
                 {tabContent}
               </Tab>
             </Tabs>
-          </Col>
+          </Col> */}
         </Row>
       </Aux>
     );

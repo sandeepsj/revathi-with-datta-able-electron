@@ -83,21 +83,21 @@ export default {
         },
       ],
     },
-    {
-      id: "student-profile",
-      title: "Student Profile",
-      type: "group",
-      icon: "icon-pages",
-      children: [
-        {
-          id: "student-details",
-          title: "Student Details",
-          type: "item",
-          url: "/WorkSpace/SubWindows/StudentDetails",
-          classes: "nav-item",
-          icon: "feather icon-help-circle",
-        },
-      ],
-    },
+    // {
+    //   id: "student-profile",
+    //   title: "Student Profile",
+    //   type: "group",
+    //   icon: "icon-pages",
+    //   children: [
+    //     {
+    //       id: "student-details",
+    //       title: "Student Details",
+    //       type: "item",
+    //       url: "/WorkSpace/SubWindows/StudentDetails",
+    //       classes: "nav-item",
+    //       icon: "feather icon-help-circle",
+    //     },
+    //   ],
+    // },
   ],
 };

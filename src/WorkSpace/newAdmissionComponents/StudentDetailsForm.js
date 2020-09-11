@@ -10,13 +10,13 @@ class StudentDetailsForm extends Component {
         </Col>
         <Col md={6}>
           <Form.Group controlId="exampleForm.ControlInput1">
-            <Form.Label>Admission No</Form.Label>
+            <Form.Label>Student ID</Form.Label>
             <Form.Control
               required={true}
               type="number"
               key={this.props.state.admnNo}
               placeholder="Admission No"
-              defaultValue={this.props.state.admnNo}
+              // defaultValue={this.props.state.admnNo}
               disabled={true}
             />
           </Form.Group>
@@ -41,7 +41,7 @@ class StudentDetailsForm extends Component {
               type="text"
               placeholder="Student's Name"
               ref={this.props.newAdmission.studentsName}
-              defaultValue="Sandeep"
+              // defaultValue="Sandeep"
             />
           </Form.Group>
         </Col>
@@ -53,7 +53,7 @@ class StudentDetailsForm extends Component {
               type="text"
               placeholder="School Name"
               ref={this.props.newAdmission.school}
-              value="AUP"
+              // value="AUP"
             />
           </Form.Group>
         </Col>
@@ -92,7 +92,7 @@ class StudentDetailsForm extends Component {
               type="text"
               placeholder="Phone"
               ref={this.props.newAdmission.phone}
-              value="75883362541"
+              // value="75883362541"
             />
           </Form.Group>
         </Col>
@@ -104,7 +104,7 @@ class StudentDetailsForm extends Component {
               type="text"
               placeholder="Phone"
               ref={this.props.newAdmission.alternatePhone}
-              value="34523562345"
+              // value="34523562345"
             />
           </Form.Group>
         </Col>
@@ -117,7 +117,7 @@ class StudentDetailsForm extends Component {
               type="email"
               placeholder="Email"
               ref={this.props.newAdmission.email}
-              value="ssj@gmc.oms"
+              // value="ssj@gmc.oms"
             />
           </Form.Group>
         </Col>

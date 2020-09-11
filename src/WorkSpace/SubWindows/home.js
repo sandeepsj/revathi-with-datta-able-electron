@@ -33,7 +33,8 @@ class Home extends Component {
         <div className="row">
           <div className="col-12">
             <h5>Subjects Enrolled & Month of last payment</h5>
-            <div className="row  p-2">
+            Working on it...
+            {/* <div className="row  p-2">
               <h6>KeyBoard: June</h6>
             </div>
             <div className="row  p-2">
@@ -44,7 +45,7 @@ class Home extends Component {
             </div>
             <div className="row  p-2">
               <h6>Vocal: August</h6>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

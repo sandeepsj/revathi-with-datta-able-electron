@@ -1,184 +1,80 @@
 import React from "react";
-import { Row, Col, Card, Table, FormControl, Form } from "react-bootstrap";
+import MaterialTable from "material-table";
 
-import Aux from "../hoc/_Aux";
+export default function MaterialTableDemo() {
+  const [state, setState] = React.useState({
+    columns: [
+      { title: "Name", field: "name" },
+      { title: "Surname", field: "surname" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      { title: "Birth Year", field: "birthYear", type: "numeric" },
+      {
+        title: "Birth Place",
+        field: "birthCity",
+        lookup: { 34: "İstanbul", 63: "Şanlıurfa" },
+      },
+    ],
+    data: [
+      { name: "NAME1", surname: "Baran", birthYear: 1987, birthCity: 63 },
+      {
+        name: "asd asdf",
+        surname: "fw",
+        birthYear: 2017,
+        birthCity: 34,
+      },
+    ],
+  });
 
-class BootstrapTable extends React.Component {
-  render() {
-    return (
-      <Aux>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Header>
-                <Card.Title as="h5">Basic Table</Card.Title>
-                <span className="d-block m-t-5">
-                  use bootstrap <code>Table</code> component
-                </span>
-              </Card.Header>
-              <Card.Body>
-                <Table responsive>
-                  <thead>
-                    <tr>
-                      <th>
-                        <Form.Label>Receipt No.</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                      <th>
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                      <th>
-                        <Form.Label>Date of Payment</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                      <th>
-                        <Form.Label>Student Admn No.</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                      <th>
-                        <Form.Label>Amount</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                      <th>
-                        <Form.Label>More Details</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Text"
-                          style={{ borderRadius: 50, height: 35, width: "80%" }}
-                        />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Larry</td>
-                      <td>the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Header>
-                <Card.Title as="h5">Hover Table</Card.Title>
-                <span className="d-block m-t-5">
-                  use props <code>hover</code> with <code>Table</code> component
-                </span>
-              </Card.Header>
-              <Card.Body>
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Username</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Larry</td>
-                      <td>the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Header>
-                <Card.Title as="h5">Striped Table</Card.Title>
-                <span className="d-block m-t-5">
-                  use props <code>striped</code> with <code>Table</code>{" "}
-                  component
-                </span>
-              </Card.Header>
-              <Card.Body>
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Username</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Larry</td>
-                      <td>the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Aux>
-    );
-  }
+  return (
+    <MaterialTable
+      title="Editable Example"
+      columns={state.columns}
+      data={state.data}
+      editable={{
+        onRowAdd: (newData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.push(newData);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              if (oldData) {
+                setState((prevState) => {
+                  const data = [...prevState.data];
+                  data[data.indexOf(oldData)] = newData;
+                  return { ...prevState, data };
+                });
+              }
+            }, 600);
+          }),
+        onRowDelete: (oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.splice(data.indexOf(oldData), 1);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+      }}
+    />
+  );
 }
-
-export default BootstrapTable;

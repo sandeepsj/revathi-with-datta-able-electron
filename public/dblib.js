@@ -20,6 +20,10 @@ class Subject {
       .del()
       .catch("Error on deleting subject");
   };
+  update = function (values) {
+    console.log(values);
+    r;
+  };
 }
 class Student {
   get = function (studentID) {
@@ -72,6 +76,18 @@ class Student {
       })
       .catch((err) => err);
   };
+  update = function (values) {
+    const val = {};
+    Object.keys(values).map((key) => {
+      if (key !== "StudentID") {
+        val[key] = values[key];
+      }
+    });
+    console.log(val, values.StudentID);
+    return knex(schema.STUDENT)
+      .where({ StudentID: parseInt(values.StudentID) })
+      .update({ ...values, StudentID: undefined });
+  };
 }
 class Admission {
   get = function (studentID) {
@@ -81,7 +97,7 @@ class Admission {
         .table(schema.ADMISSION)
         .catch((err) => err);
     } else {
-      return knex(schema.ADMISSION).where("StudentID", studentID);
+      return knex(schema.ADMISSION).where({ StudentID: studentID });
     }
   };
   add = function (values) {
@@ -111,7 +127,6 @@ class NewAdmission {
         Status: "OPEN",
       });
     });
-    console.log("ASDFASDf");
     return knex
       .transaction(function (trx) {
         return trx(schema.STUDENT)

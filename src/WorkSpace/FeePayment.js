@@ -32,8 +32,8 @@ class FormsElements extends React.Component {
                         <Col md={6}>
                           <InputGroup className="mb-3">
                             <FormControl
-                              placeholder="Admn No."
-                              aria-label="Admn No."
+                              placeholder="Student ID"
+                              aria-label="Student ID"
                               aria-describedby="basic-addon2"
                             />
                             <InputGroup.Append>

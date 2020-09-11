@@ -5,12 +5,15 @@ const { dialog } = require("electron");
 const schema = require("./schemaBuilder");
 var resChannel;
 var subWindowStudentCardStack = [];
+var specialEvt;
+
 ipcMain.on("getReq", (evt, table) => {
   resChannel = `getRes-${table}`;
   db[table]
     .get()
     .then((rows) => evt.reply(resChannel, rows))
     .catch((err) => evt.reply(resChannel, err));
+  if (table === schema.STUDENT) specialEvt = evt;
 });
 ipcMain.on("deleteReq", (evt, table, key) => {
   resChannel = `deleteRes-${table}`;
@@ -26,10 +29,29 @@ ipcMain.on("addReq", (evt, table, values) => {
     .then((res) => evt.reply(resChannel, 1))
     .catch((err) =>
       dialog.showErrorBox(
+        err,
         "KNEX: Subject db error(make sure no duplicate entries)",
         err.code
       )
     );
+});
+ipcMain.on("updateReq", (evt, table, values) => {
+  console.log(Object.keys(values).length);
+  if (Object.keys(values).length === 1) {
+    evt.reply(resChannel, 1);
+
+    return;
+  }
+  resChannel = `updateRes-${table}`;
+  subWindowStudentCardStack.push(values.StudentID);
+  db[table]
+    .update(values)
+    .then((res) => {
+      console.log("success");
+      evt.reply(resChannel, res);
+      specialEvt.reply("StudentUpdated", 1);
+    })
+    .catch((err) => dialog.showErrorBox(err.code, " : ", err, "///", table));
 });
 ipcMain.on("newAdmission", (evt, values) => {
   const studentDetails = {};
@@ -42,7 +64,6 @@ ipcMain.on("newAdmission", (evt, values) => {
   console.log(admissionDetails, "ASDf");
   db.Student.getNextId().then((nextId) => {
     admissionDetails.studentId = nextId;
-    console.log(nextId, "Here is nextId");
     db["NewAdmission"]
       .add(studentDetails, admissionDetails)
       .then((res) => evt.reply("newAdmissionRes", 1))
@@ -68,19 +89,21 @@ ipcMain.on("newSubWindow-StudentCard", (evt, id) => {
   if (id == undefined) console.log(id);
   subWindowStudentCardStack.push(id);
 });
-ipcMain.on("subWindowReq-StudentCard", (evt) => {
-  console.log(subWindowStudentCardStack);
-  studentID = subWindowStudentCardStack.pop();
+ipcMain.on("subWindowReq-StudentCard", (evt, studentID) => {
+  if (studentID === undefined) {
+    studentID = subWindowStudentCardStack.pop();
+    if (studentID === undefined) {
+      dialog.showErrorBox("studentId undefined", "studentId undefined");
+    }
+  }
   StudentCard = {};
   db.Student.get(studentID).then((res) => {
     StudentCard["personalDetails"] = { ...res[0] };
     db.Admission.get(studentID)
       .then((res0) => {
-        console.log(res0);
         StudentCard["admissionDetails"] = [...res0];
       })
       .then(() => {
-        console.log(StudentCard);
         evt.reply("Res-StudentCard", StudentCard);
       });
   });

@@ -10,31 +10,31 @@ const ipc = electron.ipcRenderer;
 class TabsPills extends React.Component {
   state = {
     personalDetails: {
-      StudentID: 0,
-      "Student's Name": "",
-      School: "",
-      "Date-of-Birth": "2020-08-27",
-      Gender: "",
-      Phone: "",
-      "Alternate Phone": "",
-      Email: "ssj@gmc.oms",
-      "Father's Name": "",
-      "Mother's Name": "",
-      "Father's Occupation": "",
-      "Mother's Occupation": "",
-      "Monthly Income": 1000,
-      pState: "",
-      pDistrict: "",
-      pCity: "",
-      pHomeStreetLandMark: "",
-      pPincode: "",
-      rState: "",
-      rDistrict: "",
-      rCity: "",
-      rHomeStreetLandMark: "",
-      rPincode: "",
+      StudentID: undefined,
+      "Student's Name": undefined,
+      School: undefined,
+      "Date-of-Birth": undefined,
+      Gender: undefined,
+      Phone: undefined,
+      "Alternate Phone": undefined,
+      Email: undefined,
+      "Father's Name": undefined,
+      "Mother's Name": undefined,
+      "Father's Occupation": undefined,
+      "Mother's Occupation": undefined,
+      "Monthly Income": undefined,
+      pState: undefined,
+      pDistrict: undefined,
+      pCity: undefined,
+      pHomeStreetLandMark: undefined,
+      pPincode: undefined,
+      rState: undefined,
+      rDistrict: undefined,
+      rCity: undefined,
+      rHomeStreetLandMark: undefined,
+      rPincode: undefined,
     },
-    admissionDetails: {
+    admissionDetails: [
       // 0: {
       //   AdmissionNo: 1,
       //   StudentID: 1,
@@ -51,19 +51,41 @@ class TabsPills extends React.Component {
       //   "Closed Date": null,
       //   Status: "OPEN",
       // },
-    },
+    ],
   };
 
-  requestId = () => {
-    ipc.send("subWindowReq-StudentCard");
+  personalDetailsRefs = {};
+  submitPersonalDetailsEdits = () => {
+    const editedObj = {};
+    Object.keys(this.state.personalDetails).map((key) => {
+      if (
+        this.personalDetailsRefs[key].current.value !=
+        this.state.personalDetails[key]
+      ) {
+        editedObj[key] = this.personalDetailsRefs[key].current.value;
+      }
+    });
+    editedObj.StudentID = this.state.personalDetails.StudentID;
+    ipc.send("updateReq", "Student", editedObj);
+    ipc.on("updateRes-Student", (evt, res) => {
+      this.requestId(this.state.personalDetails.StudentID);
+    });
+  };
+  requestId = (studentID) => {
+    if (studentID === undefined) {
+      ipc.send("subWindowReq-StudentCard");
+    } else {
+      ipc.send("subWindowReq-StudentCard", studentID);
+    }
     ipc.on("Res-StudentCard", (evt, reply) => {
-      ipc.send("StudentCard", reply);
       this.setState({ ...reply });
-      console.log(this.state, "kugyfyrxuji");
     });
   };
   componentDidMount() {
     this.requestId();
+    Object.keys(this.state.personalDetails).map((key) => {
+      this.personalDetailsRefs[key] = React.createRef();
+    });
   }
   render() {
     return (
@@ -71,7 +93,10 @@ class TabsPills extends React.Component {
         <Container>
           <Row>
             <Col>
-              <h5 className="mt-4">{this.state["Student's Name"]}</h5>
+              <h5 className="mt-4">
+                {this.state.personalDetails["Student's Name"]}
+              </h5>
+              Student ID:{this.state.personalDetails["StudentID"]}
               <hr />
               <Tab.Container defaultActiveKey="home">
                 <Row>
@@ -101,6 +126,8 @@ class TabsPills extends React.Component {
                       <Tab.Pane eventKey="profile">
                         <PersonalDetails
                           state={this.state.personalDetails}
+                          refs={this.personalDetailsRefs}
+                          submitEdits={this.submitPersonalDetailsEdits}
                           key="personalDetails"
                         />
                       </Tab.Pane>

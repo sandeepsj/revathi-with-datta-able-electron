@@ -19,11 +19,16 @@ class TableBootstrap extends React.Component {
   getStudents = () => {
     ipc.send("getReq", "Student");
     ipc.on("getRes-Student", (evt, reply) => {
-      this.setState({ data: [...reply], headers: [...Object.keys(reply[0])] });
-      this.originalData = {
-        data: [...reply],
-        headers: [...Object.keys(reply[0])],
-      };
+      if (reply[0]) {
+        this.setState({
+          data: [...reply],
+          headers: [...Object.keys(reply[0])],
+        });
+        this.originalData = {
+          data: [...reply],
+          headers: [...Object.keys(reply[0])],
+        };
+      }
     });
   };
 
@@ -42,8 +47,10 @@ class TableBootstrap extends React.Component {
     this.setState({ ...newState });
   };
   notifyMain = (id) => {
-    console.log(id);
     ipc.send("newSubWindow-StudentCard", id);
+    ipc.on("StudentUpdated", (evt) => {
+      this.getStudents();
+    });
   };
 
   componentDidMount() {
@@ -67,14 +74,19 @@ class TableBootstrap extends React.Component {
                 <Table responsive hover>
                   <thead>
                     <tr>
+                      <th />
                       {this.state.headers.map((header) => (
                         <th key={header}>
+                          {header}
                           {/* <Form.Label>{this.state.headers[header]}</Form.Label> */}
                           <Form.Control
+                            placeholder="Search..."
                             type="email"
-                            placeholder={header}
                             style={{
                               width: "110%",
+                              height: "30px",
+                              borderRadius: "50px",
+                              marginTop: 2,
                             }}
                             onChange={(event) =>
                               this.handleSearch(header, event.target.value)
@@ -99,9 +111,6 @@ class TableBootstrap extends React.Component {
         <tbody>
           {this.state.data.map((row) => (
             <tr key={row.StudentID}>
-              {Object.keys(row).map((col) => (
-                <td key={col}>{row[col]}</td>
-              ))}
               <td>
                 <Badge
                   variant="success"
@@ -118,6 +127,9 @@ class TableBootstrap extends React.Component {
                   More Details
                 </Badge>
               </td>
+              {Object.keys(row).map((col) => (
+                <td key={col}>{row[col]}</td>
+              ))}
             </tr>
           ))}
         </tbody>
