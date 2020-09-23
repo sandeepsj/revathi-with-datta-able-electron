@@ -65,6 +65,13 @@ export default {
           icon: "feather icon-server",
           url: "/WorkSpace/FeeHistory",
         },
+        {
+          id: "all-tables",
+          title: "All Tables",
+          type: "item",
+          icon: "feather icon-server",
+          url: "/WorkSpace/AllTables",
+        },
       ],
     },
     {

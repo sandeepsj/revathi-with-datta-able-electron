@@ -23,9 +23,10 @@ class Home extends Component {
             <div className="row p-2">School: {this.props.state["School"]}</div>
             <div className="row p-2">Phone: {this.props.state["Phone"]}</div>
             <div className="row p-2">
-              <p>
+              DOB: {this.props.state["Date-of-Birth"]}
+              {/* <p>
                 Fee Due:<Badge variant="warning">3 Months</Badge>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

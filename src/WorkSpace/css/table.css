@@ -1,0 +1,8 @@
+.table-fixed {
+  display: block;
+  height: 600px;
+  overflow: auto;
+}
+/* .table-fixed td {
+  max-width: 300px;
+} */

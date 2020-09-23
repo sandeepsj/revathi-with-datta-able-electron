@@ -36,6 +36,9 @@ class Student {
       return knex(schema.STUDENT).where("StudentID", studentID);
     }
   };
+  addBulk = function (values) {
+    return knex(schema.STUDENT).insert(values);
+  };
   add = function (values) {
     return knex(schema.STUDENT)
       .insert({
@@ -60,10 +63,7 @@ class Student {
         rDistrict: values.Rdistrict,
         rCity: values.Rcity,
         rPincode: values.Rpincode,
-        pHomeStreetLandMark: values.PhomeStreetLandMark,
-        School: values.school,
-
-        Phone: values.phone,
+        rHomeStreetLandMark: values.RhomeStreetLandMark,
       })
       .catch((err) => console.log(err));
   };
@@ -100,6 +100,9 @@ class Admission {
       return knex(schema.ADMISSION).where({ StudentID: studentID });
     }
   };
+  addBulk = function (values) {
+    return knex(schema.ADMISSION).insert(values);
+  };
   add = function (values) {
     var arr = [];
     values.subjects.map((subject) => {
@@ -124,7 +127,6 @@ class NewAdmission {
         StudentID: admissionDetails.studentId,
         Subject: subject,
         "Admission Date": admissionDetails.admissionDate,
-        Status: "OPEN",
       });
     });
     return knex

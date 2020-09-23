@@ -16,6 +16,7 @@ const OtherDocs = React.lazy(() => import("./Demo/Other/Docs"));
 const StudentDetails = React.lazy(() =>
   import("./WorkSpace/SubWindows/StudentDetails")
 );
+const AllTables = React.lazy(() => import("./WorkSpace/AllTable"));
 
 const routes = [
   {
@@ -41,6 +42,12 @@ const routes = [
     exact: true,
     name: "Bootstrap Table",
     component: FeeHistory,
+  },
+  {
+    path: "/WorkSpace/AllTables",
+    exact: true,
+    name: "Bootstrap Table",
+    component: AllTables,
   },
   {
     path: "/WorkSpace/NewAdmission",

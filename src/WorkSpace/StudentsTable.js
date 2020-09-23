@@ -1,32 +1,60 @@
+import { Block, Filter } from "@material-ui/icons";
 import React from "react";
-import { Row, Col, Card, Form, Table, Badge } from "react-bootstrap";
+import Fullscreen from "react-full-screen";
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Table,
+  Badge,
+  Dropdown,
+  DropdownButton,
+  FormControl,
+  Button,
+} from "react-bootstrap";
 import Aux from "../hoc/_Aux";
+import "./css/table.css";
+import StandardTable from "./Tables/standardTable";
+import AdvancedTable from "./Tables/advancedTable";
 
 const electron = window.require("electron");
 const ipc = electron.ipcRenderer;
-
 class TableBootstrap extends React.Component {
   state = {
     data: [],
     headers: [],
+    selectedHeaders: [],
+    isFull: false,
+    tableToggle: true,
   };
   originalData = {
     data: [],
     headers: [],
   };
   searchKeys = {};
+  goFull = () => {
+    this.setState({
+      ...this.state,
+      isFull: !this.state.isFull,
+    });
+  };
 
   getStudents = () => {
     ipc.send("getReq", "Student");
     ipc.on("getRes-Student", (evt, reply) => {
       if (reply[0]) {
         this.setState({
+          ...this.state,
           data: [...reply],
           headers: [...Object.keys(reply[0])],
+          selectedHeaders: [...Object.keys(reply[0])],
         });
         this.originalData = {
+          ...this.state,
           data: [...reply],
           headers: [...Object.keys(reply[0])],
+          selectedHeaders: [...Object.keys(reply[0])],
         };
       }
     });
@@ -34,7 +62,11 @@ class TableBootstrap extends React.Component {
 
   handleSearch = (col, value) => {
     this.searchKeys[col] = value;
-    const newState = { data: [], header: { ...this.originalData.headers } };
+    const newState = {
+      ...this.state,
+      data: [],
+      header: { ...this.originalData.headers },
+    };
     this.originalData.data.map((row) => {
       var count = 0;
       Object.keys(this.searchKeys).map((key) => {
@@ -52,6 +84,26 @@ class TableBootstrap extends React.Component {
       this.getStudents();
     });
   };
+  setSelectedHeaders = (headers) => {
+    const newstate = {
+      ...this.state,
+      data: [...this.state.data],
+      headers: [...this.state.headers],
+      selectedHeaders: [...headers],
+    };
+    this.setState(newstate);
+  };
+  selectHeaders = (header) => {
+    if (this.state.selectedHeaders.includes(header)) {
+      this.setSelectedHeaders(
+        this.state.selectedHeaders.filter((head) => head !== header)
+      );
+    } else {
+      const newheaders = [...this.state.selectedHeaders];
+      newheaders.push(header);
+      this.setSelectedHeaders(newheaders);
+    }
+  };
 
   componentDidMount() {
     this.getStudents();
@@ -59,83 +111,106 @@ class TableBootstrap extends React.Component {
   render() {
     return (
       <Aux>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Header>
-                <Card.Title as="h5">Student Details</Card.Title>
-                <span className="d-block m-t-5">
-                  Click on <Badge variant="success">More Details</Badge> for
-                  editing and seeing all the data related to a particular
-                  student.
-                </span>
-              </Card.Header>
-              <Card.Body>
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th />
-                      {this.state.headers.map((header) => (
-                        <th key={header}>
-                          {header}
-                          {/* <Form.Label>{this.state.headers[header]}</Form.Label> */}
-                          <Form.Control
-                            placeholder="Search..."
-                            type="email"
-                            style={{
-                              width: "110%",
-                              height: "30px",
-                              borderRadius: "50px",
-                              marginTop: 2,
-                            }}
-                            onChange={(event) =>
-                              this.handleSearch(header, event.target.value)
-                            }
-                          />
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  {this.getTBody()}
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+        <Fullscreen enabled={this.state.isFull}>
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h5">Student Details</Card.Title>
+
+                  <span className="d-block m-t-5">
+                    Click on <Badge variant="success">More Details</Badge> for
+                    editing and seeing all the data related to a particular
+                    student.
+                  </span>
+                </Card.Header>
+                <Card.Body>
+                  <Row>
+                    <Col>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="warning" id="dropdown-basic">
+                          Filter Options
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu
+                          className="bg-light text-sm"
+                          style={{
+                            overflowY: "auto",
+                            height: 450,
+                            width: 950,
+                            padding: 25,
+                          }}
+                        >
+                          <div className="mx-3 my-2 w-auto">
+                            <Row>
+                              {this.state.headers.map((header) => (
+                                <Col md="3" key={header}>
+                                  <Form.Group>
+                                    <Form.Check
+                                      label={header}
+                                      defaultChecked
+                                      onClick={() => this.selectHeaders(header)}
+                                    />
+                                    <Form.Control
+                                      size="sm"
+                                      type="text"
+                                      placeholder={header}
+                                      onChange={(event) =>
+                                        this.handleSearch(
+                                          header,
+                                          event.target.value
+                                        )
+                                      }
+                                    />
+                                  </Form.Group>
+                                </Col>
+                              ))}
+                            </Row>
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="btn btn-outline-secondary"
+                        style={{ float: "right" }}
+                        onClick={this.goFull}
+                      >
+                        Full Screen
+                        <i className="feather icon-maximize ml-2"></i>
+                      </Button>
+                      <Button
+                        variant="btn btn-outline-secondary"
+                        style={{ float: "right" }}
+                        onClick={this.toggleTable}
+                      >
+                        Advanced Editing
+                        <i className="fa fa-pencil-square-o ml-2"></i>
+                      </Button>
+                    </Col>
+                  </Row>
+                  {this.getTable()}
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Fullscreen>
       </Aux>
     );
   }
-  getTBody = () => {
-    if (this.state.data.length > 0) {
+  getTable = () => {
+    if (this.state.tableToggle) {
       return (
-        <tbody>
-          {this.state.data.map((row) => (
-            <tr key={row.StudentID}>
-              <td>
-                <Badge
-                  variant="success"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    window.open(
-                      `#/WorkSpace/SubWindows/StudentDetails`,
-                      `StudentCard-${row.StudentID}`,
-                      "height=625"
-                    );
-                    this.notifyMain(row.StudentID);
-                  }}
-                >
-                  More Details
-                </Badge>
-              </td>
-              {Object.keys(row).map((col) => (
-                <td key={col}>{row[col]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+        <StandardTable
+          state={this.state}
+          handlers={{ notifyMain: this.notifyMain }}
+        />
       );
+    } else {
+      return <AdvancedTable state={this.state} />;
     }
-    return <tbody></tbody>;
+  };
+  toggleTable = () => {
+    this.setState({ ...this.state, tableToggle: !this.state.tableToggle });
   };
 }
 

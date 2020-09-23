@@ -11,7 +11,9 @@ ipcMain.on("getReq", (evt, table) => {
   resChannel = `getRes-${table}`;
   db[table]
     .get()
-    .then((rows) => evt.reply(resChannel, rows))
+    .then((rows) => {
+      evt.reply(resChannel, rows);
+    })
     .catch((err) => evt.reply(resChannel, err));
   if (table === schema.STUDENT) specialEvt = evt;
 });

@@ -53,7 +53,6 @@ knex.schema
           table.string("Subject");
           table.date("Admission Date");
           table.date("Closed Date");
-          table.string("Status", 20);
         })
         .catch("Admission table could not be created");
     }
